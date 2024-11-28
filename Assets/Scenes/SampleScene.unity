@@ -800,8 +800,8 @@ GameObject:
   - component: {fileID: 1944302750}
   - component: {fileID: 1944302752}
   - component: {fileID: 1944302751}
-  - component: {fileID: 1944302753}
   - component: {fileID: 1944302754}
+  - component: {fileID: 1944302755}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -889,7 +889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa17d122634046b4a8e23048891fafc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RaycastPrefab: {fileID: 0}
+  m_RaycastPrefab: {fileID: 662044552438749526, guid: 6c0a4788c7b1e4938837c95e5b0c6f7c, type: 3}
 --- !u!114 &1944302752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -903,7 +903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spherePrefab: {fileID: 662044552438749526, guid: 6c0a4788c7b1e4938837c95e5b0c6f7c, type: 3}
---- !u!114 &1944302753
+--- !u!114 &1944302754
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -912,11 +912,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1944302745}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ebdc3558ece34ccd9c8dab36bf81f0b, type: 3}
+  m_Script: {fileID: 11500000, guid: 315546cfc56f04ced8b39d9bafd036fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spherePrefab: {fileID: 662044552438749526, guid: 6c0a4788c7b1e4938837c95e5b0c6f7c, type: 3}
---- !u!114 &1944302754
+--- !u!114 &1944302755
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -925,7 +925,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1944302745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 315546cfc56f04ced8b39d9bafd036fa, type: 3}
+  m_Script: {fileID: 11500000, guid: a2219a9ec69ea4144ad92137763149bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spherePrefab: {fileID: 662044552438749526, guid: 6c0a4788c7b1e4938837c95e5b0c6f7c, type: 3}
