@@ -11,17 +11,23 @@ public class StartPageController : MonoBehaviour
         var uiDocument = GetComponent<UIDocument>();
         root = uiDocument.rootVisualElement;
 
-        // 클릭 이벤트 등록
-        root.RegisterCallback<ClickEvent>(OnScreenClicked);
+        // Splash 화면 자동 비활성화 타이머 시작
+        StartSplashTimer();
     }
 
-    private void OnScreenClicked(ClickEvent evt)
+    private void StartSplashTimer()
     {
-        // UI를 비활성화
+        // 5초 후 UI 비활성화
+        Invoke(nameof(DisableSplashScreen), 5f);
+    }
+
+    private void DisableSplashScreen()
+    {
+        // UI 비활성화
         gameObject.SetActive(false);
 
         // 추가: 필요한 다른 동작(예: AR 환경 활성화)
-        Debug.Log("UI 비활성화 및 AR 환경 시작");
+        Debug.Log("스플래쉬 화면 종료 및 AR 환경 시작");
     }
 
     void OnDisable()
@@ -31,5 +37,11 @@ public class StartPageController : MonoBehaviour
         {
             root.UnregisterCallback<ClickEvent>(OnScreenClicked);
         }
+    }
+
+    private void OnScreenClicked(ClickEvent evt)
+    {
+        // 유저가 탭해도 Splash는 유지되며 Debug 표시
+        Debug.Log("스플래쉬 화면 표시 중");
     }
 }
