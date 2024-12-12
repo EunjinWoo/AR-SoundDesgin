@@ -1,9 +1,10 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TapToPlaceWithDynamicSpatialSound : MonoBehaviour
 {
     public GameObject spherePrefab; // 생성할 Sphere 프리팹
-    private GameObject currentSphere; // 현재 존재하는 Sphere 인스턴스
+    private Dictionary<string, GameObject> spheres = new Dictionary<string, GameObject>(); // 버튼별 Sphere 관리
 
     private Camera arCamera;
     private LineRenderer lineRenderer; // Visual Indicator
@@ -34,9 +35,7 @@ public class TapToPlaceWithDynamicSpatialSound : MonoBehaviour
     void Update()
     {
         HandleTouchInput();
-        UpdateAudioPosition();
-        UpdateSphereScale();
-        // UpdateVisualIndicator();
+        UpdateSpheres();
     }
 
     private void HandleTouchInput()
@@ -52,23 +51,36 @@ public class TapToPlaceWithDynamicSpatialSound : MonoBehaviour
 
                 Vector3 worldPosition = arCamera.ScreenToWorldPoint(touchPosition);
 
-                if (currentSphere != null)
+                // ARUIScreenController에서 선택된 버튼 이름 가져오기
+                string selectedButton = uiScreenController?.GetSelectedButtonName();
+                if (string.IsNullOrEmpty(selectedButton))
                 {
-                    Destroy(currentSphere);
+                    Debug.LogWarning("No button selected!");
+                    return;
                 }
 
-                currentSphere = Instantiate(spherePrefab, worldPosition, Quaternion.identity);
+                // 기존 Sphere 삭제 (같은 버튼의 Sphere만 삭제)
+                if (spheres.ContainsKey(selectedButton))
+                {
+                    Destroy(spheres[selectedButton]);
+                    spheres.Remove(selectedButton);
+                }
 
-                AudioSource audioSource = currentSphere.GetComponent<AudioSource>();
+                // 새로운 Sphere 생성
+                GameObject newSphere = Instantiate(spherePrefab, worldPosition, Quaternion.identity);
+                spheres[selectedButton] = newSphere; // Sphere를 Dictionary에 저장
+
+                // AudioSource 설정
+                AudioSource audioSource = newSphere.GetComponent<AudioSource>();
                 if (audioSource != null)
                 {
                     // ARUIScreenController에서 선택된 Clip 가져오기
                     AudioClip selectedClip = uiScreenController?.GetSelectedClip();
                     if (selectedClip != null)
                     {
-                        audioSource.clip = selectedClip; // 선택된 AudioClip 설정
+                        audioSource.clip = selectedClip;
                         audioSource.spatialBlend = 1.0f; // 3D 사운드 활성화
-                        audioSource.Play(); // 소리 재생
+                        audioSource.Play();
                     }
                     else
                     {
@@ -79,51 +91,28 @@ public class TapToPlaceWithDynamicSpatialSound : MonoBehaviour
         }
     }
 
-    private void UpdateAudioPosition()
+    private void UpdateSpheres()
     {
-        if (currentSphere == null) return;
-
-        // 카메라와 Sphere 간 상대 위치 계산
-        Vector3 directionToSphere = currentSphere.transform.position - arCamera.transform.position;
-        float distance = directionToSphere.magnitude; // 거리 계산
-
-        // 방향 벡터를 정규화
-        directionToSphere.Normalize();
-
-        // 오디오 소스 업데이트
-        AudioSource audioSource = currentSphere.GetComponent<AudioSource>();
-        if (audioSource != null)
+        foreach (var sphere in spheres.Values)
         {
-            audioSource.minDistance = 0.5f; // 최대 볼륨 거리
-            audioSource.maxDistance = 10.0f; // 소리가 들리지 않는 거리
-            audioSource.spatialBlend = 1.0f; // 3D 사운드 활성화
-            audioSource.dopplerLevel = 2.0f; // Doppler 효과 강화
-            audioSource.volume = Mathf.Clamp(1 / distance, 0.1f, 1.0f); // 거리 기반 볼륨 조정
+            if (sphere == null) continue;
+
+            // 카메라와 Sphere 간 상대 위치 계산
+            Vector3 directionToSphere = sphere.transform.position - arCamera.transform.position;
+            float distance = directionToSphere.magnitude;
+
+            // 오디오 소스 업데이트
+            AudioSource audioSource = sphere.GetComponent<AudioSource>();
+            if (audioSource != null)
+            {
+                audioSource.minDistance = 0.5f;
+                audioSource.maxDistance = 10.0f;
+                audioSource.volume = Mathf.Clamp(1 / distance, 0.1f, 1.0f);
+            }
+
+            // 크기 조정
+            float scaleFactor = Mathf.Clamp(1.0f / distance, 0.1f, 1.0f);
+            sphere.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
         }
-
-        // **Debug: 소리의 방향과 거리 정보**
-        Vector3 cameraForward = arCamera.transform.forward; // 카메라가 향하는 방향
-        float angle = Vector3.SignedAngle(cameraForward, directionToSphere, Vector3.up);
-        Debug.Log($"Angle between camera and sphere: {angle} degrees");
-    }
-
-    private void UpdateSphereScale()
-    {
-        if (currentSphere == null) return;
-
-        float distance = Vector3.Distance(currentSphere.transform.position, arCamera.transform.position);
-
-        float scaleFactor = Mathf.Clamp(1.0f / distance, 0.1f, 1.0f);
-        currentSphere.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-    }
-
-    private void UpdateVisualIndicator()
-    {
-        if (currentSphere == null || lineRenderer == null) return;
-
-        Vector3 spherePosition = currentSphere.transform.position;
-
-        lineRenderer.SetPosition(0, arCamera.transform.position); // 시작점: 카메라
-        lineRenderer.SetPosition(1, spherePosition); // 끝점: Sphere
     }
 }
