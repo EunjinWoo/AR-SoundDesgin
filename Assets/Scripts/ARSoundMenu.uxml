@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; flex-direction: column; padding: 10px; background-color: rgba(0, 0, 0, 0.4); align-items: center; justify-content: center; width: 250px; height: 600px; border-radius: 10px; margin-left: auto; margin-right: 10px; max-height: 600px;">
+        <ui:Button text="🔊 music" name="Button_Music" style="margin-bottom: 20px; height: 80px; align-self: center; font-size: 24px;" />
+        <ui:Button text="👏 applause" name="Button_Applause" style="margin-bottom: 20px; height: 80px; align-self: center; font-size: 24px;" />
+        <ui:Button text="😂 laugh" name="Button_Laugh" style="margin-bottom: 20px; height: 80px; align-self: center; font-size: 24px;" />
+        <ui:Button text="🐶 bark" name="Button_Bark" style="margin-bottom: 20px; height: 80px; align-self: center; font-size: 24px;" />
+        <ui:Button text="🐱 meow" name="Button_Meow" style="margin-bottom: 20px; height: 80px; align-self: center; font-size: 24px;" />
+        <ui:Button text="🦉 birds" name="Button_Birds" style="margin-bottom: 20px; height: 80px; align-self: center; font-size: 24px;" />
+    </ui:VisualElement>
+</ui:UXML>
