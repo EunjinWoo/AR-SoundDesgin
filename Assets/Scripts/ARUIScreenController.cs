@@ -7,12 +7,13 @@ public class ARUIScreenController : MonoBehaviour
     private AudioClip selectedClip; // 현재 선택된 AudioClip
     private string selectedButtonName; // 현재 선택된 버튼 이름
     private UIDocument uiDocument; // UIDocument 참조
+    private VisualElement root; // 루트 VisualElement 참조
 
     void OnEnable()
     {
         // UIDocument에서 VisualElement 가져오기
         uiDocument = GetComponent<UIDocument>();
-        VisualElement root = uiDocument.rootVisualElement;
+        root = uiDocument.rootVisualElement;
 
         // 버튼 연결
         var buttonMusic = root.Q<Button>("Button_Music");
@@ -33,11 +34,10 @@ public class ARUIScreenController : MonoBehaviour
 
     private void OnButtonClicked(int clipIndex, string buttonName)
     {
-        // 인덱스 범위 검사
         if (clipIndex >= 0 && clipIndex < audioClips.Length)
         {
-            selectedClip = audioClips[clipIndex]; // 선택된 AudioClip 저장
-            selectedButtonName = buttonName; // 선택된 버튼 이름 저장
+            selectedClip = audioClips[clipIndex];
+            selectedButtonName = buttonName;
             Debug.Log($"AudioClip Selected: {selectedClip.name}, Button: {selectedButtonName}");
         }
         else
@@ -48,11 +48,19 @@ public class ARUIScreenController : MonoBehaviour
 
     public AudioClip GetSelectedClip()
     {
-        return selectedClip; // 현재 선택된 Clip 반환
+        return selectedClip;
     }
 
     public string GetSelectedButtonName()
     {
-        return selectedButtonName; // 현재 선택된 버튼 이름 반환
+        return selectedButtonName;
+    }
+
+    public void SetMenuTransparency(float alpha)
+    {
+        if (root != null)
+        {
+            root.style.opacity = alpha;
+        }
     }
 }
